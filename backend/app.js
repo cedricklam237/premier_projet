@@ -1,14 +1,22 @@
 const express = require('express');
 
-const mongoose = require('mongoose');
-
 const app = express();
 
-mongoose.connect('mongodb://cedrick:lamar237@ac-iuzi2cm-shard-00-00.1u02cwq.mongodb.net:27017,ac-iuzi2cm-shard-00-01.1u02cwq.mongodb.net:27017,ac-iuzi2cm-shard-00-02.1u02cwq.mongodb.net:27017/?ssl=true&replicaSet=atlas-k5rzli-shard-0&authSource=admin&appName=Cluster0',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+const userRoutes = require('./routes/users');
+
+const mongoose = require('mongoose');
+
+require("dotenv").config();
+
+app.use('/users' , userRoutes);
+
+app.use(express.json())
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('Connexion à MongoDB réussie !')
+  })
+  .catch(err => console.log('erreur de connexion !'));
 
 app.use(express.json());
 
