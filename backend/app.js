@@ -1,14 +1,18 @@
 const express = require('express');
-
 const mongoose = require('mongoose');
 
-const app = express();
+require('dotenv').config({ quiet: true });
 
-mongoose.connect('mongodb://cedrick:lamar237@ac-iuzi2cm-shard-00-00.1u02cwq.mongodb.net:27017,ac-iuzi2cm-shard-00-01.1u02cwq.mongodb.net:27017,ac-iuzi2cm-shard-00-02.1u02cwq.mongodb.net:27017/?ssl=true&replicaSet=atlas-k5rzli-shard-0&authSource=admin&appName=Cluster0',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+const app = express();
+const mongoUri = process.env.MONGODB_URI;
+
+if (!mongoUri) {
+  console.warn('MONGODB_URI is not defined. Database connection skipped.');
+} else {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('Connexion a MongoDB reussie !'))
+    .catch(error => console.error('Connexion a MongoDB echouee !', error.message));
+}
 
 app.use(express.json());
 
@@ -22,7 +26,7 @@ app.use((req, res, next) => {
 app.post('/api/stuff', (req, res, next) => {
   console.log(req.body);
   res.status(201).json({
-    message: 'Objet créé !'
+    message: 'Objet cree !'
   });
 });
 
@@ -47,4 +51,5 @@ app.get('/api/stuff', (req, res, next) => {
   ];
   res.status(200).json(stuff);
 });
+
 module.exports = app;
