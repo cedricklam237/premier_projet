@@ -1,5 +1,6 @@
 const http = require('http');
 const app = require('./app');
+const mongooseUniquevaliator = require('mongoose-unique-validator')
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
